@@ -70,9 +70,9 @@ const stepThroughCell = (row, column) => {
   // Assemble randomly-ordered list of neighbors
   const neighbors = shuffle([
     [row - 1, column, "up"],
-    // [row, column + 1, 'right'],
-    // // [row + 1, column, 'down'],
-    // [row, column - 1, "left"],
+    [row, column + 1, "right"],
+    [row + 1, column, "down"],
+    [row, column - 1, "left"],
   ]);
 
   // For each neighbor....
@@ -81,8 +81,10 @@ const stepThroughCell = (row, column) => {
 
     // See if that neighbor is out of bounds
     if (
-      (nextRow < 0 && nextRow > cells) ||
-      (nextColumn < 0 && nextColumn > cells)
+      nextRow < 0 ||
+      nextRow >= cells ||
+      nextColumn < 0 ||
+      nextColumn >= cells
     ) {
       continue;
     }
@@ -92,20 +94,20 @@ const stepThroughCell = (row, column) => {
       continue;
     }
 
-    // Remove a wall from vertical walls
-    if (direction == "left") {
+    // Remove a wall from either vertical or horizontal walls
+    if (direction === "left" && nextRow < cells - 1) {
       verticals[row][column - 1] = true;
-    } else if (direction == "right") {
+    } else if (direction === "right" && nextRow < cells - 1) {
       verticals[row][column + 1] = true;
-    }
-    // Remove a wall from horizontal walls
-    if (direction == "up") {
+    } else if (direction === "up") {
       horizontals[row - 1][column] = true;
-    } else if ((direction = "down")) {
-      horizontals[row + 1][column] = true;
+    } else if (direction === "down") {
+      horizontals[row][column] = true;
     }
+
+    stepThroughCell(nextRow, nextColumn);
   }
   // Visit that next cell
 };
-stepThroughCell(1, 1);
-console.log(verticals);
+
+stepThroughCell(startRow, startColumn);
