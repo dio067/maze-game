@@ -1,6 +1,6 @@
-const { Engine, Render, Runner, World, Bodies, Body, Events } = Matter;
+const { Engine, Render, Runner, World, Bodies,Body, Events } = Matter;
 
-const cells = 2;
+const cells = 4;
 let height = 600;
 let width = 600;
 
@@ -117,6 +117,7 @@ const stepThroughCell = (row, column) => {
 
 stepThroughCell(startRow, startColumn);
 
+// Drawing Horizontal Walls
 horizontals.forEach((row, rowIndex) => {
   row.forEach((open, columnIndex) => {
     if (open) {
@@ -129,6 +130,7 @@ horizontals.forEach((row, rowIndex) => {
       unitLength,
       5,
       {
+        label: 'wall',
         isStatic: true
       }
     );
@@ -136,6 +138,7 @@ horizontals.forEach((row, rowIndex) => {
   });
 });
 
+// Drawing Vertical Walls
 verticals.forEach((row, rowIndex) => {
   row.forEach((open, columnIndex) => {
     if (open) {
@@ -148,6 +151,7 @@ verticals.forEach((row, rowIndex) => {
       5,
       unitLength,
       {
+        label: 'wall',
         isStatic: true
       }
     );
@@ -199,12 +203,20 @@ document.addEventListener('keydown', (e) => {
 );
 
 // Win Condition
-Events.on(engine, 'collisionStart', e => {
-    e.pairs.forEach((collision) => {
-      const labels = ['ball', 'goal'];
+Events.on(engine, 'collisionStart', event => {
+  event.pairs.forEach(collision => {
+    const labels = ['ball', 'goal'];
 
-      if( labels.includes(collision.bodyA.label && collision.bodyB.label)){
-        alert("you won!!")
-      }
-    })
-})
+    if (
+      labels.includes(collision.bodyA.label) &&
+      labels.includes(collision.bodyB.label)
+    ) {
+      world.gravity.y = 1;
+      world.bodies.forEach(body => {
+        if (body.label === 'wall') {
+          Body.setStatic(body, );
+        }
+      });
+    }
+  });
+});
