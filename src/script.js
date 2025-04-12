@@ -1,6 +1,6 @@
 const { Engine, Render, Runner, World, Bodies } = Matter;
 
-const cells = 25;
+const cells = 20;
 let height = 600;
 let width = 600;
 const unitLength = width / cells;
@@ -165,5 +165,13 @@ const goal = Bodies.rectangle(
 
 );
 
+World.add(world, goal);
 
-World.add(world, goal)
+// Ball
+const ball = Bodies.circle(
+  unitLength / 2,
+  unitLength / 2,
+  unitLength * .25,
+);
+
+World.add(world, ball);
