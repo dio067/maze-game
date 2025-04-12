@@ -3,6 +3,7 @@ const { Engine, Render, Runner, World, Bodies } = Matter;
 const cells = 3;
 let height = 600;
 let width = 600;
+const unitLength = width / cells;
 
 const engine = Engine.create();
 const { world } = engine;
@@ -29,7 +30,7 @@ World.add(world, walls);
 
 //Maze Generation
 
-const shuffle = (arr) => {
+const shuffle = arr => {
   let counter = arr.length;
 
   while (counter > 0) {
@@ -41,8 +42,10 @@ const shuffle = (arr) => {
     arr[counter] = arr[index];
     arr[index] = temp;
   }
+
   return arr;
 };
+
 const grid = Array(cells)
   .fill(null)
   .map(() => Array(cells).fill(false));
@@ -95,10 +98,10 @@ const stepThroughCell = (row, column) => {
     }
 
     // Remove a wall from either vertical or horizontal walls
-    if (direction === "left" && nextRow < cells - 1) {
+    if (direction === "left") {
       verticals[row][column - 1] = true;
-    } else if (direction === "right" && nextRow < cells - 1) {
-      verticals[row][column + 1] = true;
+    } else if (direction === "right") {
+      verticals[row][column] = true;
     } else if (direction === "up") {
       horizontals[row - 1][column] = true;
     } else if (direction === "down") {
@@ -111,3 +114,22 @@ const stepThroughCell = (row, column) => {
 };
 
 stepThroughCell(startRow, startColumn);
+
+horizontals.forEach((row, rowIndex) => {
+  row.forEach((open, columnIndex) => {
+    if (open) {
+      return;
+    }
+
+    const wall = Bodies.rectangle(
+      columnIndex * unitLength + unitLength / 2,
+      rowIndex * unitLength + unitLength,
+      unitLength,
+      10,
+      {
+        isStatic: true
+      }
+    );
+    World.add(world, wall);
+  });
+});
