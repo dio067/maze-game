@@ -3,9 +3,11 @@ const { Engine, Render, Runner, World, Bodies, Body} = Matter;
 const cells = 7;
 let height = 600;
 let width = 600;
+
 const unitLength = width / cells;
 
 const engine = Engine.create();
+engine.world.gravity.y = 0;
 const { world } = engine;
 const render = Render.create({
   element: document.body,
@@ -167,7 +169,7 @@ const goal = Bodies.rectangle(
 
 World.add(world, goal);
 
-// Ball
+// Ball Shape
 const ball = Bodies.circle(
   unitLength / 2,
   unitLength / 2,
@@ -176,6 +178,7 @@ const ball = Bodies.circle(
 
 World.add(world, ball);
 
+// Ball Movement
 document.addEventListener('keydown', (e) => {
  const {x, y} = ball.velocity;
 
