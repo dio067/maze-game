@@ -1,6 +1,6 @@
-const { Engine, Render, Runner, World, Bodies, Body} = Matter;
+const { Engine, Render, Runner, World, Bodies, Body, Events } = Matter;
 
-const cells = 7;
+const cells = 2;
 let height = 600;
 let width = 600;
 
@@ -162,6 +162,7 @@ const goal = Bodies.rectangle(
   unitLength * .7,
   unitLength * .7,
   {
+    label: 'goal',
     isStatic: true
   }
 
@@ -174,6 +175,9 @@ const ball = Bodies.circle(
   unitLength / 2,
   unitLength / 2,
   unitLength * .25,
+  {
+    label: 'ball'
+  }
 );
 
 World.add(world, ball);
@@ -193,3 +197,14 @@ document.addEventListener('keydown', (e) => {
   }
 }
 );
+
+// Win Condition
+Events.on(engine, 'collisionStart', e => {
+    e.pairs.forEach((collision) => {
+      const labels = ['ball', 'goal'];
+
+      if( labels.includes(collision.bodyA.label && collision.bodyB.label)){
+        alert("you won!!")
+      }
+    })
+})
